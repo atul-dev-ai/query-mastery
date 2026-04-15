@@ -2,7 +2,7 @@
 
 > An interactive, in-browser Database Learning Platform built to master SQL and NoSQL through gamified challenges and a real-time WebAssembly execution engine.
 
-![Version](https://img.shields.io/badge/version-1.2.0-blue.svg)
+![Version](https://img.shields.io/badge/version-1.3.0-blue.svg)
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
 ![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)
 

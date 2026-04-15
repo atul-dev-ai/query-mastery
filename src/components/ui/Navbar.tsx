@@ -75,7 +75,7 @@ export default function Navbar() {
         {/* Version Badge, Theme Toggle & Mobile Menu */}
         <div className="flex items-center gap-2 md:gap-3">
           <span className="px-2.5 py-1 text-[11px] font-bold font-mono tracking-wide text-purple-700 dark:text-purple-400 bg-purple-100/50 dark:bg-purple-500/10 border border-purple-200 dark:border-purple-500/20 rounded-full shadow-sm select-none cursor-default">
-            v1.1.0
+            v1.3.0
           </span>
 
           {mounted && (
