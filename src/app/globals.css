@@ -1,0 +1,21 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:is(.dark *));
+
+@layer base {
+  html, body {
+    @apply antialiased transition-colors duration-300;
+  }
+  
+  /* Light Mode Default */
+  html { 
+    background-color: #f9fafb; 
+    color: #111827; 
+  }
+  
+  /* Dark Mode Default */
+  html.dark { 
+    background-color: #0a0a0a !important; 
+    color: #f9fafb !important; 
+  }
+}
