@@ -18,6 +18,7 @@ import {
   Code,
 } from "lucide-react";
 import { initializeSQL, executeSQLQuery } from "@/lib/sql-engine";
+import toast from "react-hot-toast";
 
 // --- Challenge Database ---
 const sqlChallenges = [
@@ -128,8 +129,9 @@ export default function Playground() {
       setShowSolution(false); // Hide solution for the new challenge
       setQuery(sqlChallenges[nextIndex].starterCode); // Load dynamic starter code
     } else {
-      alert(
+      toast.success(
         "Congratulations! You have completed all challenges in this module.",
+        { duration: 4000, style: { background: '#333', color: '#fff' } }
       );
     }
   };
@@ -148,10 +150,12 @@ export default function Playground() {
 
   const insertSolution = () => {
     setQuery(challenge.expectedQuery);
+    toast.success("Solution inserted into editor!");
   };
   
   const copySolution = () => {
     navigator.clipboard.writeText(challenge.expectedQuery);
+    toast.success("Copied to clipboard!");
   };
 
   return (
