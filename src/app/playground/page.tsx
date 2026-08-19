@@ -13,6 +13,9 @@ import {
   Star,
   PartyPopper,
   Lightbulb,
+  Eye,
+  Copy,
+  Code,
 } from "lucide-react";
 import { initializeSQL, executeSQLQuery } from "@/lib/sql-engine";
 
@@ -66,6 +69,7 @@ export default function Playground() {
   const [points, setPoints] = useState(0);
   const [isSuccess, setIsSuccess] = useState(false);
   const [showHint, setShowHint] = useState(false); // Hint control
+  const [showSolution, setShowSolution] = useState(false); // Solution control
 
   const challenge = sqlChallenges[currentChallengeIndex];
 
@@ -121,6 +125,7 @@ export default function Playground() {
       setResults(null);
       setIsSuccess(false);
       setShowHint(false); // Hide hint for the new challenge
+      setShowSolution(false); // Hide solution for the new challenge
       setQuery(sqlChallenges[nextIndex].starterCode); // Load dynamic starter code
     } else {
       alert(
@@ -133,6 +138,20 @@ export default function Playground() {
     setShowHint(true);
     // Point penalty for using hint (optional gamification feature)
     if (points >= 5) setPoints((prev) => prev - 5);
+  };
+
+  const revealSolution = () => {
+    setShowSolution(true);
+    // Larger penalty for revealing full solution
+    if (points >= 10) setPoints((prev) => prev - 10);
+  };
+
+  const insertSolution = () => {
+    setQuery(challenge.expectedQuery);
+  };
+  
+  const copySolution = () => {
+    navigator.clipboard.writeText(challenge.expectedQuery);
   };
 
   return (
@@ -231,17 +250,30 @@ export default function Playground() {
                 Current Challenge
               </div>
 
-              {/* Dynamic Hint Button */}
-              {!isSuccess && (
-                <button
-                  onClick={applyHint}
-                  disabled={showHint}
-                  className="flex items-center gap-1.5 text-xs font-bold bg-yellow-100 dark:bg-yellow-500/20 text-yellow-700 dark:text-yellow-400 hover:bg-yellow-200 dark:hover:bg-yellow-500/30 px-3 py-1.5 rounded-lg transition-colors cursor-pointer disabled:opacity-50"
-                >
-                  <Lightbulb size={14} />{" "}
-                  {showHint ? "Hint Active" : "Need a Clue? (-5 pts)"}
-                </button>
-              )}
+              {/* Dynamic Hint and Solution Buttons */}
+              <div className="flex flex-wrap items-center gap-2">
+                {!isSuccess && (
+                  <button
+                    onClick={applyHint}
+                    disabled={showHint}
+                    className="flex items-center gap-1.5 text-xs font-bold bg-yellow-100 dark:bg-yellow-500/20 text-yellow-700 dark:text-yellow-400 hover:bg-yellow-200 dark:hover:bg-yellow-500/30 px-3 py-1.5 rounded-lg transition-colors cursor-pointer disabled:opacity-50"
+                  >
+                    <Lightbulb size={14} />{" "}
+                    {showHint ? "Hint Active" : "Need a Clue? (-5 pts)"}
+                  </button>
+                )}
+                
+                {!isSuccess && (
+                  <button
+                    onClick={revealSolution}
+                    disabled={showSolution}
+                    className="flex items-center gap-1.5 text-xs font-bold bg-red-100 dark:bg-red-500/20 text-red-700 dark:text-red-400 hover:bg-red-200 dark:hover:bg-red-500/30 px-3 py-1.5 rounded-lg transition-colors cursor-pointer disabled:opacity-50"
+                  >
+                    <Eye size={14} />{" "}
+                    {showSolution ? "Solution Revealed" : "Show Solution (-10 pts)"}
+                  </button>
+                )}
+              </div>
             </div>
 
             <h2 className="text-2xl font-extrabold text-purple-600 dark:text-purple-400 mb-2">
@@ -260,6 +292,38 @@ export default function Playground() {
                 <code className="text-sm font-mono text-gray-700 dark:text-yellow-300">
                   {challenge.hint}
                 </code>
+              </div>
+            )}
+
+            {/* Solution Box (Shows when clicked) */}
+            {showSolution && !isSuccess && (
+              <div className="mb-4 p-4 bg-red-50 dark:bg-red-900/10 border border-red-200 dark:border-red-800 rounded-lg">
+                <div className="flex justify-between items-center mb-2">
+                  <span className="text-xs font-bold text-red-600 dark:text-red-400 uppercase tracking-wider block">
+                    Solution:
+                  </span>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={copySolution}
+                      className="flex items-center gap-1 text-[11px] font-bold bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 px-2 py-1 rounded transition-colors cursor-pointer"
+                      title="Copy to Clipboard"
+                    >
+                      <Copy size={12} /> Copy
+                    </button>
+                    <button
+                      onClick={insertSolution}
+                      className="flex items-center gap-1 text-[11px] font-bold bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-300 border border-red-200 dark:border-red-700 hover:bg-red-200 dark:hover:bg-red-800/50 px-2 py-1 rounded transition-colors cursor-pointer"
+                      title="Insert into Editor"
+                    >
+                      <Code size={12} /> Insert to Editor
+                    </button>
+                  </div>
+                </div>
+                <div className="bg-white dark:bg-[#0d1117] p-3 rounded border border-red-100 dark:border-red-900/50">
+                  <code className="text-sm font-mono text-gray-800 dark:text-red-300">
+                    {challenge.expectedQuery}
+                  </code>
+                </div>
               </div>
             )}
 
